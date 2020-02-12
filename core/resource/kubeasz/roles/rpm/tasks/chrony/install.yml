@@ -1,0 +1,22 @@
+---
+
+- name: pre install chrony
+  shell: "getent group chrony > /dev/null || /usr/sbin/groupadd -r chrony
+          getent passwd chrony > /dev/null || /usr/sbin/useradd -r -g chrony \
+                 -d /var/lib/chrony -s /sbin/nologin chrony"
+
+
+- name:  install
+  copy:
+    src: "dir/*"
+    dest: "/"
+
+
+- name: post install chrony
+  shell: "if grep -q 'PIDFile=/var/run/chronyd.pid' \
+                          /etc/systemd/system/chronyd.service 2> /dev/null && \
+                  ! grep -qi '^[ '$'\t'']*pidfile' /etc/chrony.conf 2> /dev/null
+          then
+                  sed -i '/PIDFile=/s|/run/|/run/chrony/|' \
+                          /etc/systemd/system/chronyd.service
+          fi"
