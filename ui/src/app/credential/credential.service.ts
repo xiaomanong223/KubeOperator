@@ -7,7 +7,7 @@ import {Credential} from './credential-list/credential';
   providedIn: 'root'
 })
 export class CredentialService {
-  private baseURl = '/api/v1/credential/';
+  private baseURl = '/api/v1/credentials/';
 
   constructor(private http: HttpClient) {
   }

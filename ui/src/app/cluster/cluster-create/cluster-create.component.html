@@ -297,49 +297,6 @@
       </div>
     </form>
   </clr-wizard-page>
-  <clr-wizard-page [clrWizardPageNextDisabled]="!canCheckNext()" *ngIf="cluster.deploy_type === Manual">
-    <!--<clr-wizard-page>-->
-    <ng-template clrPageTitle>配置检查</ng-template>
-    <div>
-      1.检查cpu
-      <span [ngSwitch]="checkCpuState">
-      <i *ngSwitchCase="'pending'" class=" fa fa-spinner fa-spin"></i>
-      <clr-icon *ngSwitchCase="'success'" shape="success-standard"></clr-icon>
-      <clr-icon *ngSwitchCase="'fail'" shape="error-standar" class="is-solid"></clr-icon>
-      </span><br/>
-      <div *ngIf="checkCpuState === 'fail'">
-        <span style="color: green;">通过检查:</span> {{checkCpuResult.passed}}
-        <br/>
-        <span style="color: red;">未通过检查:</span> {{checkCpuResult.failed}}
-      </div>
-    </div>
-    <div>
-      2.检查内存
-      <span [ngSwitch]="checkMemoryState">
-         <i *ngSwitchCase="'pending'" class=" fa fa-spinner fa-spin"></i>
-      <clr-icon *ngSwitchCase="'success'" shape="success-standard"></clr-icon>
-      <clr-icon *ngSwitchCase="'fail'" shape="error-standar" class="is-solid"></clr-icon>
-      </span><br/>
-      <div *ngIf="checkMemoryState === 'fail'">
-        <span style="color: green;">通过检查:</span> {{checkMemoryResult.passed}}
-        <br/>
-        <span style="color: red;">未通过检查:</span> {{checkMemoryResult.failed}}
-      </div>
-    </div>
-    <div>
-      3.检查操作系统
-      <span [ngSwitch]="checkOsState">
-      <i *ngSwitchCase="'pending'" class=" fa fa-spinner fa-spin"></i>
-      <clr-icon *ngSwitchCase="'success'" shape="success-standard"></clr-icon>
-      <clr-icon *ngSwitchCase="'fail'" shape="error-standar" class="is-solid"></clr-icon>
-      </span><br/>
-      <div *ngIf="checkOsState === 'fail'">
-        <span style="color: green;">通过检查:</span> {{checkOsResult.passed}}
-        <br/>
-        <span style="color: red;">未通过检查:</span> {{checkOsResult.failed}}
-      </div>
-    </div>
-  </clr-wizard-page>
   <clr-wizard-page>
     <form clrForm class="clr-form clr-form-compact">
       <ng-template clrPageTitle>其他设置</ng-template>

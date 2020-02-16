@@ -1,34 +1,17 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Host} from './host';
+import {CommonService} from '../ko-common/class/common-service';
+import {HttpClient} from '@angular/common/http';
 
-
-const baseUrl = '/api/v1/host/';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HostService {
+export class HostService extends CommonService<Host> {
+  baseUrl = '/api/v1/hosts/';
 
-  constructor(private http: HttpClient) {
-
-  }
-
-  listHosts(): Observable<Host[]> {
-    return this.http.get<Host[]>(baseUrl);
-  }
-
-  getHost(hostId: string): Observable<Host> {
-    return this.http.get<Host>(baseUrl + hostId + '/');
-  }
-
-  createHost(host: Host): Observable<Host> {
-    return this.http.post<Host>(baseUrl, host);
-  }
-
-  deleteHost(hostId: string): Observable<any> {
-    return this.http.delete<any>(baseUrl + hostId + '/');
+  constructor(private h: HttpClient) {
+    super(h);
   }
 
 

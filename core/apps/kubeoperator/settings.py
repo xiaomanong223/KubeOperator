@@ -23,6 +23,7 @@ PACKAGE_IMAGE_NAME = 'registry.fit2cloud.com/public/nexus-helm:3.15.2-01'
 PACKAGE_PATH_PREFIX = "/opt/kubeoperator/data/packages/"
 PACKAGE_DIR = "/data/packages"
 CONFIG = load_user_config()
+CLUSTER_CONFIG_PATH = os.path.join(BASE_DIR, "resource", "cluster", "config.yml")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -37,13 +38,18 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
-    'storage.apps.StorageConfig',
-    'kubeops_api.apps.KubeOperatorApiConfig',
-    'cloud_provider.apps.CloudProviderConfig',
+
+    #  'kubeops_api.apps.KubeOperatorApiConfig',
+    #  'cloud_provider.apps.CloudProviderConfig',
+    'ko_host.apps.KoHostConfig',
+    'ko_cluster.apps.KoClusterConfig',
+    'ko_system.apps.KoSystemConfig',
+    'ko_package.apps.KoPackageConfig',
+    'ko_users.apps.KoUsersConfig',
+    # 'storage.apps.StorageConfig',
     'ansible_api.apps.AnsibleApiConfig',
     'celery_api.apps.CeleryApiConfig',
-    'users.apps.UsersConfig',
-    'log.apps.LogConfig',
+    # 'log.apps.LogConfig',
     'django_celery_beat',
     'rest_framework',
     'drf_yasg',
@@ -219,7 +225,7 @@ CHANNEL_LAYERS = {
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'ko_users.utils.jwt_response_payload_handler',
     'JWT_ALLOW_REFRESH': True,
 }
 

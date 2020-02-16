@@ -1,6 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HostCreateComponent} from './host-create/host-create.component';
 import {HostListComponent} from './host-list/host-list.component';
+import {AlertDeleteComponent} from '../ko-common/component/alert-delete/alert-delete.component';
+import {Host} from './host';
+import {CommonItem} from '../ko-common/class/common-item';
+import {HostDetailComponent} from './host-detail/host-detail.component';
 
 @Component({
   selector: 'app-host',
@@ -9,11 +13,18 @@ import {HostListComponent} from './host-list/host-list.component';
 })
 export class HostComponent implements OnInit {
 
-  @ViewChild(HostCreateComponent, { static: true })
+  @ViewChild(HostCreateComponent, {static: true})
   creationHost: HostCreateComponent;
 
-  @ViewChild(HostListComponent, { static: true })
+  @ViewChild(HostListComponent, {static: true})
   listHost: HostListComponent;
+
+  @ViewChild(AlertDeleteComponent, {static: true})
+  deletion: AlertDeleteComponent;
+
+  @ViewChild(HostDetailComponent, {static: true})
+  detail: HostDetailComponent;
+
 
   constructor() {
   }
@@ -21,14 +32,25 @@ export class HostComponent implements OnInit {
   ngOnInit() {
   }
 
-  openModal() {
+  openAdd() {
     this.creationHost.newHost();
   }
 
-  createHost(created: boolean) {
-    if (created) {
-      this.refresh();
-    }
+  openDelete(items: CommonItem[]) {
+    this.deletion.open(items);
+  }
+
+  openDetail(item: Host) {
+    this.detail.open(item);
+  }
+
+  postAdd() {
+    this.refresh();
+  }
+
+  postDelete() {
+    console.log(123);
+    this.listHost.confirmDelete();
   }
 
   refresh() {

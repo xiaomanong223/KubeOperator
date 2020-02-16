@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {CredentialService} from '../credential.service';
 import {Credential} from './credential';
-import {HostInfoComponent} from '../../host/host-info/host-info.component';
+import {HostDetailComponent} from '../../host/host-detail/host-detail.component';
 import {CommonAlertService} from '../../base/header/common-alert.service';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
 
@@ -16,8 +16,8 @@ export class CredentialListComponent implements OnInit {
   selected: Credential[] = [];
   loading = true;
   @Output() add = new EventEmitter();
-  @ViewChild(HostInfoComponent, {static: false})
-  child: HostInfoComponent;
+  @ViewChild(HostDetailComponent, {static: false})
+  child: HostDetailComponent;
   showDelete = false;
   resourceTypeName: '凭据';
 

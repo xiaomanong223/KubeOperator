@@ -50,7 +50,7 @@ export class NfsCreateComponent implements OnInit {
   }
 
   listHosts() {
-    this.hostService.listHosts().subscribe(data => {
+    this.hostService.list().subscribe(data => {
       this.hosts = data;
     });
   }

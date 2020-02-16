@@ -9,7 +9,6 @@ import {ClusterCreateComponent} from './cluster-create/cluster-create.component'
 
 import {ClusterRoutingResolverService} from './cluster-routing-resolver.service';
 import {HostsFilterPipe} from './hosts-filter.pipe';
-import {DeviceCheckService} from './device-check.service';
 import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
@@ -20,7 +19,7 @@ import {SharedModule} from '../shared/shared.module';
     CoreModule,
     SharedModule
   ],
-  providers: [ClusterService, ClusterRoutingResolverService, DeviceCheckService]
+  providers: [ClusterService, ClusterRoutingResolverService]
 })
 export class ClusterModule {
 }

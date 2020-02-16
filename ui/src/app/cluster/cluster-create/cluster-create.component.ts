@@ -10,7 +10,6 @@ import {Host, Volume} from '../../host/host';
 import {Node} from '../../node/node';
 import {HostService} from '../../host/host.service';
 import {Group} from '../group';
-import {CheckResult, DeviceCheckService} from '../device-check.service';
 import {Subject} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
@@ -62,9 +61,6 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
   checkCpuState = CHECK_STATE_PENDING;
   checkMemoryState = CHECK_STATE_PENDING;
   checkOsState = CHECK_STATE_PENDING;
-  checkCpuResult: CheckResult = new CheckResult();
-  checkMemoryResult: CheckResult = new CheckResult();
-  checkOsResult: CheckResult = new CheckResult();
   suffix = 'f2o';
   @ViewChild('basicFrom', {static: true}) basicForm: NgForm;
   @ViewChild('storageForm', {static: true}) storageForm: NgForm;
@@ -87,7 +83,7 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
 
   constructor(private alertService: CommonAlertService, private nodeService: NodeService, private clusterService: ClusterService
     , private packageService: PackageService, private relationService: RelationService,
-              private hostService: HostService, private deviceCheckService: DeviceCheckService,
+              private hostService: HostService,
               private settingService: SettingService, private planService: PlanService, private storageService: StorageService,
               private cephService: CephService) {
   }
@@ -213,10 +209,8 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
 
 
   getAllHost() {
-    this.hostService.listHosts().subscribe(data => {
-      this.hosts = data.filter(host => {
-        return !host.cluster;
-      });
+    this.hostService.list().subscribe(data => {
+      this.hosts = data;
     });
   }
 
@@ -355,15 +349,10 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
 
   fullNode() {
     this.resetCheckState();
-    this.deviceCheck();
     this.nodes.forEach(node => {
       this.hosts.forEach(host => {
         if (node.host === host.id) {
           node.ip = host.ip;
-          node.host_memory = host.memory;
-          node.host_cpu_core = host.cpu_core;
-          node.host_os = host.os;
-          node.host_os_version = host.os_version;
         }
       });
     });
@@ -414,10 +403,7 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
 
   getHostInfo(host: Host) {
     const template = '{N} [{C}核  {M}MB  {O}]';
-    return template.replace('{C}', host.cpu_core.toString())
-      .replace('{M}', host.memory.toString())
-      .replace('{O}', host.os + host.os_version)
-      .replace('{N}', host.name);
+    return template.replace('{N}', host.name);
   }
 
   getVolumeInfo(volume: Volume) {
@@ -439,45 +425,6 @@ export class ClusterCreateComponent implements OnInit, OnDestroy {
       });
     }
     return result;
-  }
-
-  deviceCheck() {
-    setTimeout(() => {
-      this.checkCpu();
-    }, 2000);
-    setTimeout(() => {
-      this.checkMemory();
-    }, 4000);
-    setTimeout(() => {
-      this.checkOS();
-    }, 6000);
-  }
-
-  checkCpu() {
-    this.checkCpuResult = this.deviceCheckService.checkCpu(this.nodes, this.hosts, this.template);
-    if (this.checkCpuResult.passed.length === this.nodes.length) {
-      this.checkCpuState = CHECK_STATE_SUCCESS;
-    } else {
-      this.checkCpuState = CHECK_STATE_FAIL;
-    }
-  }
-
-  checkMemory() {
-    this.checkMemoryResult = this.deviceCheckService.checkMemory(this.nodes, this.hosts, this.template);
-    if (this.checkMemoryResult.passed.length === this.nodes.length) {
-      this.checkMemoryState = CHECK_STATE_SUCCESS;
-    } else {
-      this.checkMemoryState = CHECK_STATE_FAIL;
-    }
-  }
-
-  checkOS() {
-    this.checkOsResult = this.deviceCheckService.checkOs(this.nodes, this.hosts, this.template);
-    if (this.checkOsResult.passed.length === this.nodes.length) {
-      this.checkOsState = CHECK_STATE_SUCCESS;
-    } else {
-      this.checkOsState = CHECK_STATE_FAIL;
-    }
   }
 
   resetCheckState() {

@@ -33,20 +33,21 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {SystemLogComponent} from './system-log/system-log.component';
 import {SystemLogModule} from './system-log/system-log.module';
 import {DnsModule} from './dns/dns.module';
-import { ClusterStorageComponent } from './cluster-storage/cluster-storage.component';
-import { ClusterEventComponent } from './cluster-event/cluster-event.component';
-import { ClusterEventListComponent } from './cluster-event/cluster-event-list/cluster-event-list.component';
-import { ClusterEventDetailComponent } from './cluster-event/cluster-event-detail/cluster-event-detail.component';
-import { CephComponent } from './ceph/ceph.component';
-import { CephListComponent } from './ceph/ceph-list/ceph-list.component';
-import { CephCreateComponent } from './ceph/ceph-create/ceph-create.component';
-import { NgCircleProgressModule } from 'ng-circle-progress';
-import { ItemComponent } from './item/item.component';
-import { ItemCreateComponent } from './item/item-create/item-create.component';
-import { ItemListComponent } from './item/item-list/item-list.component';
-import { ItemDetailComponent } from './item/item-detail/item-detail.component';
-import { ItemMemberComponent } from './item-member/item-member.component';
-import { ItemResourceComponent } from './item-resource/item-resource.component';
+import {ClusterStorageComponent} from './cluster-storage/cluster-storage.component';
+import {ClusterEventComponent} from './cluster-event/cluster-event.component';
+import {ClusterEventListComponent} from './cluster-event/cluster-event-list/cluster-event-list.component';
+import {ClusterEventDetailComponent} from './cluster-event/cluster-event-detail/cluster-event-detail.component';
+import {CephComponent} from './ceph/ceph.component';
+import {CephListComponent} from './ceph/ceph-list/ceph-list.component';
+import {CephCreateComponent} from './ceph/ceph-create/ceph-create.component';
+import {NgCircleProgressModule} from 'ng-circle-progress';
+import {ItemComponent} from './item/item.component';
+import {ItemCreateComponent} from './item/item-create/item-create.component';
+import {ItemListComponent} from './item/item-list/item-list.component';
+import {ItemDetailComponent} from './item/item-detail/item-detail.component';
+import {ItemMemberComponent} from './item-member/item-member.component';
+import {ItemResourceComponent} from './item-resource/item-resource.component';
+import {KoCommonModule} from './ko-common/ko-commmon.module';
 
 @NgModule({
   declarations: [
@@ -95,8 +96,9 @@ import { ItemResourceComponent } from './item-resource/item-resource.component';
     NfsModule,
     StorageModule,
     SystemLogModule,
+    KoCommonModule,
     DnsModule,
-       NgCircleProgressModule.forRoot({
+    NgCircleProgressModule.forRoot({
       radius: 100,
       outerStrokeWidth: 16,
       innerStrokeWidth: 8,

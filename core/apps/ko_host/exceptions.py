@@ -1,0 +1,2 @@
+class HostConnectedException(Exception):
+    pass

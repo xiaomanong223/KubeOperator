@@ -24,10 +24,9 @@ export class AddWorkerComponent implements OnInit {
   }
 
   loadHosts() {
-    this.hostService.listHosts().subscribe(data => {
-      this.hosts = data.filter(host => {
-        return !host.cluster;
-      });
+    this.hostService.list().subscribe(data => {
+      this.hosts = data;
+
     });
   }
 

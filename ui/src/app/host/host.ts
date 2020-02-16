@@ -1,22 +1,14 @@
-export class Host {
+import {CommonItem} from '../ko-common/class/common-item';
+
+export class Host extends CommonItem {
   id: string;
   name: string;
   ip: string;
   port: number;
-  username: string;
-  password: string;
   credential: string;
-  cluster: string;
-  comment: string;
-  memory: number;
-  os: string;
-  os_version: string;
-  cpu_core: number;
-  region: string;
-  zone: string;
-  status: string;
-  volumes: Volume[];
-  has_gpu: boolean;
+  connected: string;
+  basic: Basic;
+  volumes: Volume[] = [];
   gpus: GPU[] = [];
   conditions: Condition[] = [];
 }
@@ -30,12 +22,21 @@ export class Volume {
   id: string;
   name: string;
   size: string;
-  blank: boolean;
 }
 
 export class Condition {
   status: boolean;
-  message: string;
   reason: string;
+  type: string;
   last_time: string;
+}
+
+export class Basic {
+  hostname: string;
+  memory: string;
+  cpu_core: number;
+  os_distribution: string;
+  os_distribution_version: string;
+  architecture: string;
+  kernel: string;
 }

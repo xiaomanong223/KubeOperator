@@ -1,0 +1,59 @@
+<clr-modal [(clrModalOpen)]="opened" [clrModalSize]="'lg'">
+  <h3 class="modal-title">主机信息</h3>
+  <div class="modal-body">
+    <div *ngIf="item.basic && !loading">
+      <h5>基本信息</h5>
+      <hr/>
+      主机名:{{item.basic.hostname}}<br/>
+      架构:{{item.basic.architecture}}<br/>
+      内核:{{item.basic.kernel}}<br/>
+      CPU:{{item.basic.cpu_core}} 核<br/>
+      内存:{{item.basic.memory}} MB<br/>
+      操作系统:{{item.basic.os_distribution}} {{item.basic.os_distribution_version}}<br/>
+      <h5>磁盘信息</h5>
+      <hr/>
+      <clr-datagrid>
+        <clr-dg-column>名称</clr-dg-column>
+        <clr-dg-column>大小</clr-dg-column>
+
+        <clr-dg-row *clrDgItems="let volume of item.volumes" [clrDgItem]="volume">
+          <clr-dg-cell>{{volume.name}}</clr-dg-cell>
+          <clr-dg-cell>{{volume.size}}</clr-dg-cell>
+        </clr-dg-row>
+      </clr-datagrid>
+      <br/>
+      <div *ngIf="item.gpus">
+        <h5>显卡信息</h5>
+        <hr/>
+        <clr-datagrid>
+          <clr-dg-column>名称</clr-dg-column>
+          <clr-dg-row *clrDgItems="let gpu of item.gpus" [clrDgItem]="gpu">
+            <clr-dg-cell>{{gpu.name}}</clr-dg-cell>
+          </clr-dg-row>
+        </clr-datagrid>
+      </div>
+      <h5>健康检查</h5>
+      <hr/>
+      <clr-datagrid>
+        <clr-dg-column>原因</clr-dg-column>
+        <clr-dg-column>采集时间</clr-dg-column>
+        <clr-dg-column>状态</clr-dg-column>
+        <clr-dg-column>消息</clr-dg-column>
+
+        <clr-dg-row *clrDgItems="let con of item.conditions" [clrDgItem]="con">
+          <clr-dg-cell>{{con.type}}</clr-dg-cell>
+          <clr-dg-cell>{{con.last_time}}</clr-dg-cell>
+          <clr-dg-cell>{{con.status}}</clr-dg-cell>
+          <clr-dg-cell>{{con.reason}}</clr-dg-cell>
+        </clr-dg-row>
+      </clr-datagrid>
+    </div>
+    <div *ngIf="loading" style="text-align: center">
+      <clr-spinner></clr-spinner>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" (click)="onCancel()" [disabled]="loading">取消</button>
+    <button type="button" class="btn" (click)="onRefresh()" [disabled]="loading">刷新</button>
+  </div>
+</clr-modal>

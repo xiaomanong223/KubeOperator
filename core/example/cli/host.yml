@@ -1,0 +1,8 @@
+# host
+api: v1
+resource: Host
+meta:
+  name: test
+  port: 22
+  ip: 172.16.10.142
+  credential:

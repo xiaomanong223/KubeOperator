@@ -1,0 +1,11 @@
+api: v1
+resource: Cluster
+meta:
+  nodes:
+    - name: master1
+      host: host
+      lable: ["master","worker","router"]
+  cni: "calico"
+  storage:
+    - name: nfs
+      vars:

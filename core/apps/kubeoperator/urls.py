@@ -22,13 +22,12 @@ schema_view = get_schema_view(
 
 def get_api_v1_urlpatterns():
     _urlpatterns = [
-        path('', include('users.urls')),
+        path('', include('ko_users.urls')),
+        path('', include('ko_host.urls')),
+        path('', include('ko_cluster.urls')),
+        path('', include('ko_package.urls')),
+        path('', include('ko_system.urls')),
         path('', include('celery_api.urls.api_urls')),
-        path('', include('kubeops_api.api_url')),
-        path('', include('cloud_provider.api_url')),
-        path('', include('storage.api_url')),
-        path('', include('log.api_url')),
-
     ]
     return _urlpatterns
 

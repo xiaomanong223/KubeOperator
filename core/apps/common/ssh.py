@@ -24,7 +24,7 @@ class SSHClient:
     def __init__(self, config):
         self.config = config
 
-    def run_cmd(self, cmd):
+    def run_cmd(self, cmd) -> (str, int):
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())

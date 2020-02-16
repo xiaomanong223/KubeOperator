@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {HostService} from '../host.service';
 import {Host} from '../host';
-import {HostInfoComponent} from '../host-info/host-info.component';
 import {CommonAlertService} from '../../base/header/common-alert.service';
+import {CommonItem} from '../../ko-common/class/common-item';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
 
 @Component({
@@ -12,15 +12,12 @@ import {AlertLevels} from '../../base/header/components/common-alert/alert';
 })
 export class HostListComponent implements OnInit {
 
-  hosts: Host[] = [];
+  items: Host[] = [];
   loading = false;
-  deleteModal = false;
-  selectedHosts: Host[] = [];
-  showHostInfo = false;
-  @Output() addHost = new EventEmitter();
-  @ViewChild(HostInfoComponent, {static: true})
-  child: HostInfoComponent;
-
+  selected: Host[] = [];
+  @Output() add = new EventEmitter();
+  @Output() detail = new EventEmitter<Host>();
+  @Output() delete = new EventEmitter<CommonItem[]>();
 
   constructor(private hostService: HostService, private alertService: CommonAlertService) {
   }
@@ -29,27 +26,23 @@ export class HostListComponent implements OnInit {
     this.listHost();
   }
 
-  onDeleted() {
-    this.deleteModal = true;
+  onDelete() {
+    this.delete.emit(this.selected);
   }
 
-  canSelectedHostsDelete(): boolean {
-    if (this.selectedHosts.length === 0) {
-      return false;
-    }
-    let result = true;
-    this.selectedHosts.forEach(host => {
-      if (host.cluster !== null) {
-        result = false;
-      }
-    });
-    return result;
+  onAdd() {
+    this.add.emit();
   }
+
+  onDetail(item: Host) {
+    this.detail.emit(item);
+  }
+
 
   confirmDelete() {
     const promises: Promise<{}>[] = [];
-    this.selectedHosts.forEach(host => {
-      promises.push(this.hostService.deleteHost(host.id).toPromise());
+    this.selected.forEach(host => {
+      promises.push(this.hostService.delete(host.id).toPromise());
     });
     Promise.all(promises).then(() => {
       this.refresh();
@@ -57,8 +50,7 @@ export class HostListComponent implements OnInit {
     }, (error) => {
       this.alertService.showAlert('删除主机失败:' + error, AlertLevels.ERROR);
     }).finally(() => {
-      this.deleteModal = false;
-      this.selectedHosts = [];
+      this.selected = [];
     });
   }
 
@@ -67,26 +59,14 @@ export class HostListComponent implements OnInit {
     this.listHost();
   }
 
-  addNewHost() {
-    this.addHost.emit();
-  }
-
-  openInfo(host: Host) {
-    this.showHostInfo = true;
-    this.child.host = host;
-  }
-
   listHost() {
     this.loading = true;
-    this.hostService.listHosts().subscribe(data => {
-      this.hosts = data;
+    this.hostService.list().subscribe(data => {
+      this.items = data;
       this.loading = false;
     }, error => {
       this.loading = false;
     });
   }
 
-  getValueOrNone(value) {
-    return value == null ? '无' : value;
-  }
 }
