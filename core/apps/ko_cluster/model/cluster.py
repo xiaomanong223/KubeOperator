@@ -2,8 +2,8 @@ import yaml
 from django.db import models
 from ansible_api.models import Project
 import common.models as common_models
+from ko_cluster.model.config import ConfigFile
 from ko_cluster.model.node import Node
-from kubeoperator.settings import CLUSTER_CONFIG_PATH
 from ko_cluster.model.role import Role
 
 __all__ = ["Cluster"]
@@ -12,16 +12,14 @@ __all__ = ["Cluster"]
 class Cluster(Project):
     package = models.ForeignKey("ko_package.Package", null=True, on_delete=models.SET_NULL)
     configs = common_models.JsonDictTextField(default={})
-    config_path = CLUSTER_CONFIG_PATH
 
     @classmethod
-    def load_config(cls):
-        with open(cls.config_path) as f:
-            config = yaml.load(f)
-            return config
+    def cluster_config(cls):
+        config = ConfigFile.objects.get(name="cluster", version="v1")
+        return config
 
     def create_roles(self):
-        config = Cluster.load_config()
+        config = Cluster.cluster_config()
         roles_meta = config["cluster"]["roles"]
         parent = Role.objects.create(project=self, name="cluster")
         roles = []
@@ -42,7 +40,7 @@ class Cluster(Project):
             node.set_groups(group_names=['cluster'])
 
     def set_default_configs(self):
-        config = Cluster.load_config()
+        config = Cluster.cluster_config()
         self.configs.update(config["cluster"]["vars"])
         self.save()
 

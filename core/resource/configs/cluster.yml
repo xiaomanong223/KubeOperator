@@ -1,14 +1,6 @@
 version: v1
-cni:
-  - name: flannel
-    vars:
-      CLUSTER_NETWORK: flannel
-storage:
-  - name: nfs
-    vars:
-      storage_nfs_enabled: true
-      storage_nfs_provisioner_name: nfs-provisioner
-cluster:
+resource: cluster
+meta:
   vars: {}
   roles:
     - name: master
@@ -47,7 +39,7 @@ cluster:
         - name: memory
           minimal: 4
           excellent: 16
-    - name: loadblance
+    - name: loadblancer
       vars: {}
       requires:
         - name: volume

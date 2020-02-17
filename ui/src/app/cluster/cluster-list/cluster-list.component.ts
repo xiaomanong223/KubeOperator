@@ -22,24 +22,15 @@ export class ClusterListComponent implements OnInit {
   @Output() addCluster = new EventEmitter<void>();
 
   constructor(private clusterService: ClusterService, private router: Router,
-              private alertService: CommonAlertService, private settingService: SettingService,
-              private packageLogoService: PackageLogoService,
-              private clusterStatusService: ClusterStatusService) {
+              private alertService: CommonAlertService) {
   }
 
   ngOnInit() {
-    this.checkSetting();
     this.listCluster();
   }
 
-  checkSetting() {
-    this.settingService.getSettings().subscribe(data => {
-      this.hasHostname = !!data['local_hostname'];
-    });
-  }
-
   listCluster() {
-    this.clusterService.listCluster().subscribe(data => {
+    this.clusterService.list().subscribe(data => {
       this.clusters = data;
       this.loading = false;
     }, error => {
@@ -55,7 +46,7 @@ export class ClusterListComponent implements OnInit {
   confirmDelete() {
     const promises: Promise<{}>[] = [];
     this.selectedClusters.forEach(cluster => {
-      promises.push(this.clusterService.deleteCluster(cluster.name).toPromise());
+      promises.push(this.clusterService.delete(cluster.name).toPromise());
     });
     Promise.all(promises).then(() => {
       this.listCluster();
@@ -66,30 +57,7 @@ export class ClusterListComponent implements OnInit {
     });
   }
 
-
   addNewCluster() {
     this.addCluster.emit();
   }
-
-
-  getStatusComment(status: string): string {
-    return this.clusterStatusService.getComment(status);
-  }
-
-  getDeployTypeComment(type: string): string {
-    return this.clusterStatusService.getDeployType(type);
-  }
-
-
-  showBtn(cluster: Cluster, opt: Operation): boolean {
-    let result = true;
-    if (opt.display_on) {
-      if (!opt.display_on.includes(cluster.status)) {
-        result = false;
-      }
-    }
-    return result;
-  }
-
-
 }

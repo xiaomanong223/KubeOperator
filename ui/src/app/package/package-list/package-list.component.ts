@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Package} from '../package';
 import {PackageService} from '../package.service';
-import {PackageLogoService} from '../package-logo.service';
 import {PackageDetailComponent} from '../package-detail/package-detail.component';
 import {CommonAlertService} from '../../base/header/common-alert.service';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
@@ -15,21 +14,20 @@ export class PackageListComponent implements OnInit {
 
   loading = true;
   packages: Package[] = [];
-  selectedRow: Package[] = [];
   showDetail = false;
   @ViewChild(PackageDetailComponent, {static: true})
   child: PackageDetailComponent;
 
-  constructor(private offlineService: PackageService, private packageLogoService: PackageLogoService, private alert: CommonAlertService) {
+  constructor(private offlineService: PackageService, private alert: CommonAlertService) {
   }
 
   ngOnInit() {
-    this.listOfflines();
+    this.listPackages();
   }
 
-  listOfflines() {
+  listPackages() {
     this.loading = true;
-    this.offlineService.listPackage().subscribe(data => {
+    this.offlineService.list().subscribe(data => {
       this.packages = data;
       this.loading = false;
     });
@@ -40,14 +38,10 @@ export class PackageListComponent implements OnInit {
     this.child.loadPackage(item);
   }
 
-  getLogo(p: Package): string {
-    return this.packageLogoService.getLogo(p.meta.resource);
-  }
-
 
   refresh() {
     this.alert.showAlert('刷新成功', AlertLevels.SUCCESS);
-    this.listOfflines();
+    this.listPackages();
   }
 
 }

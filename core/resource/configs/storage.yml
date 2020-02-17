@@ -1,0 +1,13 @@
+version: v1
+resource: storage
+meta:
+  items:
+    - name: nfs
+      vars:
+        storage_nfs_enabled: true
+        storage_nfs_provisioner_name: nfs-provisioner
+      params: []
+    - name: rook-ceph
+      vars:
+        storage_rook_ceph_enabled: true
+      params: []

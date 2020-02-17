@@ -20,6 +20,10 @@ export class CommonService<T> {
     return this.http.post<T>(this.baseUrl, item);
   }
 
+  update(item: T): Observable<T> {
+    return this.http.patch<T>(this.baseUrl, item);
+  }
+
   delete(id: string): Observable<any> {
     return this.http.delete<any>(this.baseUrl + id + '/');
   }

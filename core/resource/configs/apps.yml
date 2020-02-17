@@ -1,0 +1,59 @@
+version: v1
+resource: application
+meta:
+  items:
+    - name: Grafana
+      logo: grafana_icon.svg
+      url_key: grafana
+      describe: "集群监控展示面板"
+      require: true
+      vars:
+        grafana_install: true
+
+    - name: Prometheus
+      logo: prometheus.ico
+      url_key: prometheus
+      describe: "集群监控采集工具"
+      require: true
+      vars:
+        prometheus_install: true
+
+    - name: Dashboard
+      logo: k8s.png
+      url_key: dashboard
+      describe: "Kubernetes 管理控制台"
+      require: false
+      vars:
+        dashboard_install: true
+
+    - name: Kubeapps Plus
+      logo: kubeapps.png
+      url_key: kubeapps-plus
+      describe: "应用市场,一键离线部署常见应用"
+      require: false
+      vars:
+        kubeapps_install: true
+
+    - name: Registry-console
+      logo: registry.png
+      url_key: registry-ui
+      describe: "Docker 镜像仓库"
+      require: false
+      vars:
+        registry_console_install: true
+
+    - name: Traefik
+      logo: traefik_logo.svg
+      url_key: traefik
+      describe: "HTTP 反向代理、负载均衡工具"
+      require: false
+      vars:
+        traefik_install: true
+
+    - name: Weave Scope
+      logo: weave-logo.png
+      url_key: scope
+      describe: "实时交互展示和管理 Kubernetes 集群、主机、Pod 和容器"
+      require: false
+      vars:
+        weave_scope_install: true

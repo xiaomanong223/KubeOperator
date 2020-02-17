@@ -2,6 +2,7 @@ from rest_framework import serializers
 from ansible_api.serializers import ProjectSerializer, GroupSerializer
 from ansible_api.serializers import HostSerializer as AnsibleHostSerializer
 from ko_cluster.model.cluster import Cluster
+from ko_cluster.model.config import ConfigFile
 from ko_cluster.model.node import Node
 from ko_cluster.model.role import Role
 from ko_package.models import Package
@@ -43,3 +44,12 @@ class ClusterSerializer(ProjectSerializer):
         model = Cluster
         fields = ['id', 'name', 'package', 'date_created', 'configs']
         read_only_fields = ['id', 'date_created']
+
+
+class ConfigFileSerializer(serializers.ModelSerializer):
+    meta = serializers.DictField(required=False)
+
+    class Meta:
+        model = ConfigFile
+        fields = ['id', 'name', 'version', 'meta']
+        read_only_fields = ['id', 'name', 'version', 'meta']
