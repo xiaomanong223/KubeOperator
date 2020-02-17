@@ -21,3 +21,4 @@ data
 *.log
 django.iml
 data/static/*
+example/*

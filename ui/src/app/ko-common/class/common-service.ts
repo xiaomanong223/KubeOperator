@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 export class CommonService<T> {
   baseUrl = '';
 
-  constructor(private http: HttpClient) {
+  constructor(public http: HttpClient) {
 
   }
 

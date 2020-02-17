@@ -1,5 +1,6 @@
-export class User {
-  id: number;
+import {CommonItem} from '../ko-common/class/common-item';
+
+export class User extends CommonItem {
   name: string;
   username: string;
   password: string;

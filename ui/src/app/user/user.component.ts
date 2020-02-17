@@ -1,6 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserCreateComponent} from './user-create/user-create.component';
 import {UserListComponent} from './user-list/user-list.component';
+import {AlertDeleteComponent} from '../ko-common/component/alert-delete/alert-delete.component';
+import {CommonItem} from '../ko-common/class/common-item';
+import {User} from './user';
+
 
 @Component({
   selector: 'app-user',
@@ -10,21 +14,29 @@ import {UserListComponent} from './user-list/user-list.component';
 export class UserComponent implements OnInit {
 
   @ViewChild(UserCreateComponent, {static: true})
-  creationUser: UserCreateComponent;
+  creation: UserCreateComponent;
   @ViewChild(UserListComponent, {static: true})
   listUser: UserListComponent;
+  @ViewChild(AlertDeleteComponent, {static: true})
+  deletion: AlertDeleteComponent;
 
   constructor() {
   }
 
-  openModal() {
-    this.creationUser.newUser();
+  openAdd() {
+    this.creation.newUser();
   }
 
-  createUser(created: boolean) {
-    if (created) {
-      this.refresh();
-    }
+  openDelete(items: CommonItem[]) {
+    this.deletion.open(items);
+  }
+
+  postDelete() {
+    this.listUser.confirmDelete();
+  }
+
+  postAdd() {
+    this.refresh();
   }
 
   refresh() {

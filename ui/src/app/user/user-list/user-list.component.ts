@@ -3,6 +3,7 @@ import {User} from '../user';
 import {UserService} from '../user.service';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
 import {CommonAlertService} from '../../base/header/common-alert.service';
+import {CommonItem} from '../../ko-common/class/common-item';
 
 @Component({
     selector: 'app-user-list',
@@ -15,7 +16,8 @@ export class UserListComponent implements OnInit {
     users: User[] = [];
     selected: User[] = [];
     deleteModal = false;
-    @Output() addUser = new EventEmitter();
+    @Output() add = new EventEmitter();
+    @Output() delete = new EventEmitter<CommonItem[]>();
 
     constructor(private userService: UserService, private alertService: CommonAlertService) {
     }
@@ -24,16 +26,24 @@ export class UserListComponent implements OnInit {
         this.listUser();
     }
 
+    onDelete() {
+        this.delete.emit(this.selected);
+    }
+
+    onAdd() {
+        this.add.emit();
+    }
+
 
     toggleActiveUser(user: User) {
-        this.userService.activeUser(user).subscribe(data => {
+        this.userService.active(user).subscribe(data => {
             user = data;
         });
     }
 
     listUser() {
         this.loading = true;
-        this.userService.listUsers().subscribe(data => {
+        this.userService.list().subscribe(data => {
             this.users = data.filter((u) => {
                 return u.username !== 'admin';
             });
@@ -41,14 +51,11 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    onDelete() {
-        this.deleteModal = true;
-    }
 
     confirmDelete() {
         const promises: Promise<{}>[] = [];
         this.selected.forEach(user => {
-            promises.push(this.userService.deleteUser(user.id).toPromise());
+            promises.push(this.userService.delete(user.name).toPromise());
         });
         Promise.all(promises).then(() => {
             this.refresh();
@@ -59,9 +66,6 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    addNewUser() {
-        this.addUser.emit();
-    }
 
     refresh() {
         this.listUser();

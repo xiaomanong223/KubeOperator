@@ -1,31 +1,20 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {User} from './user';
-import {catchError} from 'rxjs/operators';
-import {error} from '@angular/compiler/src/util';
+import {CommonService} from '../ko-common/class/common-service';
 
 const userUrl = '/api/v1/users/';
 
 @Injectable()
-export class UserService {
+export class UserService extends CommonService<User> {
+  baseUrl = '/api/v1/users/';
 
-  constructor(private http: HttpClient) {
+  constructor(http: HttpClient) {
+    super(http);
   }
 
-  listUsers(): Observable<User[]> {
-    return this.http.get<User[]>(userUrl);
-  }
-
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(userUrl, user);
-  }
-
-  activeUser(user: User): Observable<User> {
+  active(user: User): Observable<User> {
     return this.http.patch<User>(userUrl + user.id + '/', {is_active: user.is_active});
-  }
-
-  deleteUser(userId): Observable<any> {
-    return this.http.delete(userUrl + userId + '/');
   }
 }

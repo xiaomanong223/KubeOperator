@@ -23,13 +23,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source="username")
+
     class Meta:
         model = get_user_model()
         fields = [
-            'id', 'username', 'email',
+            'id', 'username', 'name', 'email',
             'is_superuser', 'is_active', 'date_joined', 'last_login'
         ]
-        read_only_fields = ['date_joined', 'last_login']
+        read_only_fields = ['id', 'date_joined', 'last_login']
 
 
 class UserCreateUpdateSerializer(UserSerializer):

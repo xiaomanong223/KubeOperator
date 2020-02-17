@@ -49,7 +49,6 @@ export class HostComponent implements OnInit {
   }
 
   postDelete() {
-    console.log(123);
     this.listHost.confirmDelete();
   }
 

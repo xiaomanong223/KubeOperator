@@ -14,7 +14,6 @@ import {UserService} from '../user.service';
 })
 export class UserCreateComponent implements OnInit {
     @Output() create = new EventEmitter<boolean>();
-    staticBackdrop = true;
     closable = false;
     opened: boolean;
     isSubmitGoing = false;
@@ -48,7 +47,7 @@ export class UserCreateComponent implements OnInit {
             return;
         }
         this.isSubmitGoing = true;
-        this.userService.createUser(this.user).subscribe(data => {
+        this.userService.create(this.user).subscribe(data => {
             this.isSubmitGoing = false;
             this.opened = false;
             this.create.emit(true);
@@ -60,7 +59,7 @@ export class UserCreateComponent implements OnInit {
     }
 
     checkUsernameDuplicate() {
-        this.userService.listUsers().subscribe(data => {
+        this.userService.list().subscribe(data => {
             data.some(u => {
                 if (u.username === this.user.username) {
                     this.isUserNameDuplicate = true;

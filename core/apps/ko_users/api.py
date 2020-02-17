@@ -17,6 +17,8 @@ class UserViewSet(ModelViewSet):
     permission_classes = (IsAdminUser,)
     serializer_class = UserSerializer
     serializer_class_create = UserCreateUpdateSerializer
+    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
 
     def get_serializer_class(self):
         if self.action in ('create', 'update'):

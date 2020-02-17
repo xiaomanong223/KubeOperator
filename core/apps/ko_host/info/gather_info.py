@@ -61,7 +61,7 @@ class GpuInfoHandler(AbstractHandler):
 
 
 class HostInfoCollector:
-    handlers = [BasicInfoHandler, GpuInfoHandler]
+    handlers = [BasicInfoHandler, GpuInfoHandler, VolumeInfoHandler]
 
     def __init__(self, host):
         self.host = host

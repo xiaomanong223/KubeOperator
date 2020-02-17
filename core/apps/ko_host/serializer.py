@@ -60,9 +60,9 @@ class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
         fields = [
-            "type", "status", "message", "reason", "last_time"
+            "type", "status", "reason", "last_time"
         ]
-        read_only_fields = ["type", "status", "message", "reason", "last_time"]
+        read_only_fields = ["type", "status", "reason", "last_time"]
 
 
 class HostSerializer(HostReadSerializer, HostSerializerMixin):
