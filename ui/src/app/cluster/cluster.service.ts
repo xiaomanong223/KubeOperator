@@ -1,9 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Cluster, ClusterConfigs, ExtraConfig} from './cluster';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {HostService} from '../host/host.service';
+import {Cluster} from './cluster';
 import {CommonService} from '../ko-common/class/common-service';
 
 

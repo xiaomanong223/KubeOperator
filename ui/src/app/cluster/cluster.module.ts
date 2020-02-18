@@ -6,12 +6,13 @@ import {CoreModule} from '../core/core.module';
 import {ClusterService} from './cluster.service';
 import {ClusterDetailComponent} from './cluster-detail/cluster-detail.component';
 import {ClusterRoutingResolverService} from './cluster-routing-resolver.service';
-import {HostsFilterPipe} from './hosts-filter.pipe';
 import {SharedModule} from '../shared/shared.module';
 import { ClusterCreateComponent } from './cluster-create/cluster-create.component';
+import { HostFilterPipe } from './pipe/host-filter.pipe';
+import { HostPopPipe } from './pipe/host-pop.pipe';
 
 @NgModule({
-  declarations: [ClusterComponent, ClusterListComponent, ClusterDetailComponent, HostsFilterPipe, ClusterCreateComponent],
+  declarations: [ClusterComponent, ClusterListComponent, ClusterDetailComponent, ClusterCreateComponent, HostFilterPipe, HostPopPipe],
   imports: [
     CommonModule,
     CoreModule,

@@ -1,4 +1,3 @@
-import yaml
 from django.db import models
 from ansible_api.models import Project
 import common.models as common_models

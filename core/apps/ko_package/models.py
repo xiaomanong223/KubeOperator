@@ -30,6 +30,4 @@ class Package(models.Model):
                 metadata = yaml.load(f)
                 name = metadata["name"]
                 defaults = {'name': name, 'meta': metadata}
-                _, created = cls.objects.update_or_create(defaults=defaults, name=d)
-                if created:
-                    logger.info("package {} created".format(name))
+                _, created = cls.objects.update_or_create(defaults=defaults, name=name)

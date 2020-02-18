@@ -5,6 +5,7 @@ from ko_cluster.model.cluster import Cluster
 from ko_cluster.model.config import ConfigFile
 from ko_cluster.model.node import Node
 from ko_cluster.model.role import Role
+from ko_host.models import Host
 from ko_package.models import Package
 
 
@@ -39,10 +40,15 @@ class ClusterSerializer(ProjectSerializer):
         slug_field='name', required=False
     )
     configs = serializers.DictField(required=False)
+    nodes = serializers.ListField(required=False)
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        return instance
 
     class Meta:
         model = Cluster
-        fields = ['id', 'name', 'package', 'date_created', 'configs']
+        fields = ['id', 'name', 'package', 'date_created', 'configs', 'nodes']
         read_only_fields = ['id', 'date_created']
 
 

@@ -1,10 +1,7 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {Cluster, Operation} from '../cluster';
+import {Cluster} from '../cluster';
 import {ClusterService} from '../cluster.service';
 import {Router} from '@angular/router';
-import {SettingService} from '../../setting/setting.service';
-import {PackageLogoService} from '../../package/package-logo.service';
-import {ClusterStatusService} from '../cluster-status.service';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
 import {CommonAlertService} from '../../base/header/common-alert.service';
 
@@ -17,9 +14,8 @@ export class ClusterListComponent implements OnInit {
   loading = true;
   clusters: Cluster[] = [];
   deleteModal = false;
-  hasHostname = false;
   selectedClusters: Cluster[] = [];
-  @Output() addCluster = new EventEmitter<void>();
+  @Output() add = new EventEmitter();
 
   constructor(private clusterService: ClusterService, private router: Router,
               private alertService: CommonAlertService) {
@@ -27,6 +23,10 @@ export class ClusterListComponent implements OnInit {
 
   ngOnInit() {
     this.listCluster();
+  }
+
+  openAdd() {
+    this.add.emit();
   }
 
   listCluster() {
@@ -57,7 +57,4 @@ export class ClusterListComponent implements OnInit {
     });
   }
 
-  addNewCluster() {
-    this.addCluster.emit();
-  }
 }

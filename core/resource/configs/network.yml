@@ -14,26 +14,10 @@ meta:
           options:
             - {"name":vxlan,"value":vxlan}
             - {"name":host-gw,"value":host-gw}
-        - name: SERVICE_CIDR
-          alias: Service CIDR
-          value: 179.10.0.0/16
-          type: Input
-        - name: CLUSTER_CIDR
-          type: Input
-          alias: POD CIDR
-          value: 179.20.0.0/16
     - name: calico
       vars:
         CLUSTER_NETWORK: calico
       params:
-        - name: SERVICE_CIDR
-          alias: Service CIDR
-          value: 179.10.0.0/16
-          type: Input
-        - name: CLUSTER_CIDR
-          type: Input
-          alias: POD CIDR
-          value: 179.20.0.0/16
         - name: CALICO_IPV4POOL_IPIP
           alias: 网络模式
           type: Select

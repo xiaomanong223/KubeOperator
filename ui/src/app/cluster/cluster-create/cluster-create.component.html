@@ -6,21 +6,24 @@
   <clr-wizard-button [type]="'next'">下一步</clr-wizard-button>
   <clr-wizard-button [type]="'finish'">完成</clr-wizard-button>
 
-  <clr-wizard-page>
+  <clr-wizard-page [clrWizardPageNextDisabled]="basicForm.invalid||isNameDuplicate">
     <ng-template clrPageTitle>基本信息</ng-template>
-    <form clrForm>
+    <form clrForm #basicForm='ngForm'>
       <clr-input-container>
         <label>名称</label>
-        <input clrInput size="45" type="text" [(ngModel)]="cluster.name" name="name"/>
+        <input clrInput size="45" type="text" [(ngModel)]="cluster.name" name="name"
+               (focusout)="nameDuplicateChecker()" required/>
+        <clr-control-helper *ngIf="isNameDuplicate">集群: {{this.cluster.name}} 已存在!</clr-control-helper>
       </clr-input-container>
       <clr-input-container>
         <label>域名</label>
-        <input clrInput size="45" type="text" [(ngModel)]="cluster.configs[' domain']" name="domain"/>
+        <input clrInput size="45" type="text" [(ngModel)]="cluster.configs['domain']" name="domain"
+               placeholder="example.com" required/>
       </clr-input-container>
       <clr-select-container>
         <label>离线包</label>
-        <select clrSelect [(ngModel)]="cluster.package" name="package">
-          <option value=""></option>
+        <select clrSelect [(ngModel)]="cluster.package" name="package" required>
+          <option value="">请选择</option>
           <option *ngFor="let pkg of packages" [value]="pkg.name">{{pkg.name}}</option>
         </select>
       </clr-select-container>
@@ -29,17 +32,21 @@
 
   <clr-wizard-page>
     <ng-template clrPageTitle>配置节点</ng-template>
-    <form clrForm>
+    <br/>
+    <form clrForm #nodeForm='ngForm'>
       <div *ngFor="let node of nodes">
         <div>
-          <h3>{{node.name}}<span (click)="deleteNode(node)">删除</span></h3>
+          <h3>{{node.name}}<span style="float: right"><button
+            (click)="deleteNode(node)"
+            class="btn btn-info-outline btn-sm" [disabled]="nodes.length===1"><i
+            class="fa fa-trash" aria-hidden="true"></i></button></span></h3>
           <hr/>
         </div>
         <clr-select-container>
           <label>主机</label>
-          <select clrSelect type="text">
-            <option value=""></option>
-            <option *ngFor="let host of hosts" [value]="host.name">{{host.name}}</option>
+          <select clrSelect type="text" [name]="node.name+'host'" required [(ngModel)]="node.host">
+            <option value="">请选择</option>
+            <option *ngFor="let host of hosts | hostPop:nodes:node" [value]="host.name">{{host | hostFilter}}</option>
           </select>
         </clr-select-container>
         <clr-checkbox-container>
@@ -56,64 +63,88 @@
             <label>Router</label>
             <input clrCheckbox type="checkbox" [name]="node.name+ 'router'" [(ngModel)]="node.roles['router']">
           </clr-checkbox-wrapper>
-          <clr-checkbox-wrapper>
-            <label>Loadblancer</label>
-            <input clrCheckbox type="checkbox" [name]="node.name+ 'loadblancer'"
-                   [(ngModel)]="node.roles['loadblancer']">
-          </clr-checkbox-wrapper>
         </clr-checkbox-container>
       </div>
-      <span (click)="addNode()">添加</span>
-
+      <button
+        (click)="addNode()"
+        class="btn btn-info-outline btn-sm"><i
+        class="fa fa-plus-circle" aria-hidden="true"></i></button>
     </form>
   </clr-wizard-page>
 
 
-  <clr-wizard-page>
+  <clr-wizard-page [clrWizardPageNextDisabled]="storageForm.invalid">
     <ng-template clrPageTitle>配置存储</ng-template>
-    <form clrForm>
+    <form clrForm #storageForm='ngForm'>
       <div *ngFor="let storage of storageClazz">
-        <h3>{{storage.name}}<span (click)="deleteStorageClass(storage)">X</span></h3>
+        <h3>{{storage.name}}<span style="float: right"><button
+          (click)="deleteStorageClass(storage)"
+          class="btn btn-info-outline btn-sm" [disabled]="storageClazz.length===1"><i
+          class="fa fa-trash" aria-hidden="true"></i></button></span></h3>
         <hr/>
         <clr-select-container>
           <label>存储类型</label>
-          <select clrSelect [name]="storage.name" [(ngModel)]="storage['type']">
+          <select clrSelect [name]="storage.name" [(ngModel)]="storage.meta">
             <option value=""></option>
             <option *ngFor="let sm of storageMetas" [ngValue]="sm">{{sm["name"]}}</option>
           </select>
         </clr-select-container>
+        <div *ngIf="storage.meta">
+          <div *ngFor="let param of storage.meta.params">
+            <div [ngSwitch]="param.type">
+              <clr-input-container *ngSwitchCase="'Input'">
+                <label>{{param.name}}</label>
+                <input clrInput type="text" [name]="storage.name+param.name" [(ngModel)]="storage.vars[param.name]"
+                       [placeholder]="param.value" required>
+              </clr-input-container>
+              <clr-select-container *ngSwitchCase="'Select'">
+                <select clrSelect [(ngModel)]="storage.vars[param.name]" [name]="storage.name+param.name" required>
+                  <option value="">请选择</option>
+                  <option *ngFor="let option of param.options" [value]="option.value">{{option.name}}</option>
+                </select>
+              </clr-select-container>
+            </div>
+          </div>
+        </div>
       </div>
-      <span (click)="addStorageClass()">+</span>
+      <button (click)="addStorageClass()"
+              class="btn btn-info-outline btn-sm"><i
+        class="fa fa-plus-circle" aria-hidden="true"></i>
+      </button>
     </form>
   </clr-wizard-page>
 
-  <clr-wizard-page>
+  <clr-wizard-page [clrWizardPageNextDisabled]="networkForm.invalid">
     <ng-template clrPageTitle>配置网络</ng-template>
-    <form clrForm>
+    <form clrForm #networkForm='ngForm'>
       <clr-select-container>
         <label>网络类型</label>
-        <select clrSelect name="cni" [(ngModel)]="netWork">
+        <select clrSelect name="cni" [(ngModel)]="netWork.meta">
           <option value=""></option>
           <option *ngFor="let nm of networkMetas" [ngValue]="nm">{{nm["name"]}}</option>
         </select>
       </clr-select-container>
-    </form>
-  </clr-wizard-page>
-
-  <clr-wizard-page>
-    <ng-template clrPageTitle>内置应用</ng-template>
-    <form clrForm>
-      <div>
-        <clr-checkbox-container>
-          <clr-checkbox-wrapper *ngFor="let app of apps">
-            <label>{{app.name }}  ({{app.describe}})</label>
-            <input [disabled]="app.require" clrCheckbox type="checkbox" [name]="app.name+'install'"
-                   [(ngModel)]="app.install">
-          </clr-checkbox-wrapper>
-        </clr-checkbox-container>
+      <div *ngIf="netWork.meta">
+        <div *ngFor="let param of netWork.meta.params">
+          <div [ngSwitch]="param.type">
+            <clr-input-container *ngSwitchCase="'Input'">
+              <label>{{param.name}}</label>
+              <input clrInput type="text" [name]="param.name" [(ngModel)]="netWork.vars[param.name]"
+                     [placeholder]="param.value" required>
+            </clr-input-container>
+            <clr-select-container *ngSwitchCase="'Select'">
+              <label>{{param.name}}</label>
+              <select clrSelect [(ngModel)]="netWork.vars[param.name]" [name]="param.name" required>
+                <option value="">请选择</option>
+                <option *ngFor="let option of param.options" [value]="option.value">{{option.name}}</option>
+              </select>
+            </clr-select-container>
+          </div>
+        </div>
       </div>
     </form>
   </clr-wizard-page>
+
   <clr-wizard-page>
     <ng-template clrPageTitle>集群参数</ng-template>
     <form clrForm>
@@ -149,6 +180,20 @@
           </select>
         </clr-select-container>
       </div>
+
+      <div>
+        <h3>Kube Controller Manager</h3>
+        <hr/>
+        <clr-input-container>
+          <label>SERVICE 默认网段</label>
+          <input clrInput size="45" name="pod" [(ngModel)]="cluster.configs['SERVICE_CIDR']">
+        </clr-input-container>
+        <clr-input-container>
+          <label>POD 默认网段</label>
+          <input clrInput size="45" name="pod" [(ngModel)]="cluster.configs['CLUSTER_CIDR']">
+        </clr-input-container>
+        <hr/>
+      </div>
       <div>
         <h3>监控</h3>
         <hr/>
@@ -162,5 +207,49 @@
 
   <clr-wizard-page>
     <ng-template clrPageTitle>确认配置</ng-template>
+    <div *ngIf="netWork.meta && storageClazz[0].meta">
+      <h3>基础信息</h3>
+      <hr/>
+      <ul class="list">
+        <li>名称: {{cluster.name}}</li>
+        <li>域名: {{cluster.configs['domain']}}</li>
+        <li>离线包: {{cluster.package}}</li>
+        <li>网络插件: {{netWork.meta.name}}</li>
+      </ul>
+      <h3>存储</h3>
+      <hr/>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>名称</th>
+          <th>类型</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let storage of storageClazz">
+          <td>{{storage.name}}</td>
+          <td>{{storage.meta.name}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <h3>节点</h3>
+      <hr/>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>名称</th>
+          <th>主机</th>
+          <!--          <th>角色</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let node of nodes">
+          <td>{{node.name}}</td>
+          <td>{{node.host}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
   </clr-wizard-page>
 </clr-wizard>

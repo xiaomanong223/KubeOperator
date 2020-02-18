@@ -8,11 +8,12 @@ import {HostService} from '../../host/host.service';
 import {Host} from '../../host/host';
 import {ConfigFile} from '../class/config-file';
 import {ConfigFileService} from '../service/config-file.service';
-import {Role} from '../../node/role';
-import {NodeEmitterVisitor} from '@angular/compiler-cli/src/transformers/node_emitter';
 import {StorageClass} from '../class/storage-class';
+import {ClusterService} from '../cluster.service';
+import {NgForm} from '@angular/forms';
 import {Network} from '../class/network';
-import {App} from '../class/app';
+import {CommonAlertService} from '../../base/header/common-alert.service';
+import {AlertLevels} from '../../base/header/components/common-alert/alert';
 
 @Component({
   selector: 'app-cluster-create',
@@ -22,57 +23,127 @@ import {App} from '../class/app';
 export class ClusterCreateComponent implements OnInit {
 
   constructor(private packageService: PackageService, private hostService: HostService,
-              private configService: ConfigFileService) {
+              private configService: ConfigFileService,
+              private clusterService: ClusterService,
+              private alert: CommonAlertService) {
   }
 
   @ViewChild('wizard', {static: true}) wizard: ClrWizard;
-  opened = true;
+  opened = false;
+  isOnSubmitGoing = false;
   packages: Package[] = [];
   hosts: Host[] = [];
   nodes: Node[] = [];
   storageClazz: StorageClass[] = [];
-  apps: App[] = [];
-  netWork = {};
+  netWork: Network = new Network();
   networkMetas = [];
   storageMetas = [];
   nodeSize = 0;
   storageSize = 0;
   clusterConfig: ConfigFile = new ConfigFile();
-  appConfig: ConfigFile = new ConfigFile();
   cluster: Cluster = new Cluster();
+  isNameDuplicate = false;
+
+  // forms
+  @ViewChild('basicForm', {static: true}) basicForm: NgForm;
+  @ViewChild('nodeForm', {static: true}) nodeForm: NgForm;
+  @ViewChild('storageForm', {static: true}) storageForm: NgForm;
+  @ViewChild('networkForm', {static: true}) networkForm: NgForm;
+
 
   ngOnInit() {
-    this.open();
   }
 
-  open() {
+  newCluster() {
     this.clear();
-    this.cluster = new Cluster();
+    this.opened = true;
   }
 
   clear() {
+    this.resetForms();
     this.wizard.reset();
+    this.networkMetas = [];
+    this.storageMetas = [];
+    this.nodes = [];
+    this.storageClazz = [];
+    this.netWork = new Network();
+    this.cluster = new Cluster();
     this.listPackages();
     this.listHosts();
     this.getClusterConfig();
     this.getNetworkConfig();
     this.getStorageConfig();
-    this.getAppConfig();
     this.generateDefaultStorageClazz();
   }
 
-  generateDefaultApps() {
-    for (const appMeta of this.appConfig['meta']['items']) {
-      const app = new App();
-      app.name = appMeta['name'];
-      app.describe = appMeta['describe'];
-      app.require = appMeta['require'];
-      app.install = appMeta['require'];
-      app.logo = appMeta['logo'];
-      app.vars = appMeta['vars'];
-      app.url_key = appMeta['url_key'];
-      this.apps.push(app);
+  roleSum(role: string): number {
+    let result = 0;
+    this.nodes.forEach(node => {
+      if (node.roles[role]) {
+        ++result;
+      }
+    });
+    return result;
+  }
+
+  onSubmit() {
+    if (this.isOnSubmitGoing) {
+      return;
     }
+    this.isOnSubmitGoing = true;
+    this.fullCluster();
+    this.clusterService.create(this.cluster).subscribe(() => {
+      this.opened = false;
+      this.isOnSubmitGoing = false;
+      this.alert.showAlert('创建集群成功！', AlertLevels.SUCCESS);
+    });
+  }
+
+  fullCluster() {
+    this.handleNodes();
+    this.handleStorageClass();
+    this.handleNetwork();
+  }
+
+  handleNodes() {
+    this.cluster.nodes = this.nodes;
+  }
+
+  handleStorageClass() {
+    for (const storage of this.storageClazz) {
+      const vars = {};
+      Object.assign(vars, storage.vars, storage.meta.vars);
+      for (const key in vars) {
+        if (key) {
+          this.cluster.configs['key'] = vars['key'];
+        }
+      }
+    }
+  }
+
+  handleNetwork() {
+    const vars = {};
+    Object.assign(vars, this.netWork.vars, this.netWork.meta.vars);
+    for (const key in vars) {
+      if (key) {
+        this.cluster.configs['key'] = vars['key'];
+      }
+    }
+  }
+
+  resetForms() {
+    const forms: NgForm[] = [this.basicForm, this.nodeForm, this.storageForm, this.networkForm];
+    forms.forEach(form => {
+      form.resetForm();
+    });
+  }
+
+  nameDuplicateChecker() {
+    this.clusterService.get(this.cluster.name).subscribe(() => {
+      this.isNameDuplicate = true;
+    }, () => {
+      this.isNameDuplicate = false;
+    });
   }
 
 
@@ -157,13 +228,6 @@ export class ClusterCreateComponent implements OnInit {
       data['meta']['items'].forEach(storage => {
         this.storageMetas.push(storage);
       });
-    });
-  }
-
-  getAppConfig() {
-    this.configService.get('application').subscribe(data => {
-      this.appConfig = data;
-      this.generateDefaultApps();
     });
   }
 
