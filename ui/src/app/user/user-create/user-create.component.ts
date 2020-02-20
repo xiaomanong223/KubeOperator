@@ -6,72 +6,57 @@ import * as globals from '../../globals';
 import {AlertLevels} from '../../base/header/components/common-alert/alert';
 import {User} from '../user';
 import {UserService} from '../user.service';
+import {CommonCreateComponent} from '../../ko-common/class/common-create-component';
+import {EventResult} from '../../ko-common/class/event-result';
 
 @Component({
-    selector: 'app-user-create',
-    templateUrl: './user-create.component.html',
-    styleUrls: ['./user-create.component.css']
+  selector: 'app-user-create',
+  templateUrl: './user-create.component.html',
+  styleUrls: ['./user-create.component.css']
 })
-export class UserCreateComponent implements OnInit {
-    @Output() create = new EventEmitter<boolean>();
-    closable = false;
-    opened: boolean;
-    isSubmitGoing = false;
-    user: User = new User();
-    loading = false;
-    @ViewChild('userForm', {static: true}) userFrom: NgForm;
-    isPasswordMatch = true;
-    isUserNameDuplicate = false;
+export class UserCreateComponent extends CommonCreateComponent<User> {
+  @ViewChild('userForm', {static: true}) userFrom: NgForm;
+  isPasswordMatch = true;
+  isUserNameDuplicate = false;
 
-    constructor(private userService: UserService) {
-    }
+  constructor(public service: UserService) {
+    super(service);
+  }
 
+  reset() {
+    this.isPasswordMatch = true;
+    this.isUserNameDuplicate = false;
+    this.userFrom.resetForm();
+  }
 
-    ngOnInit() {
+  checkPassword() {
+    this.isPasswordMatch = this.item.password === this.item.ensurePassword;
+  }
 
-    }
-
-    reset() {
-        this.isPasswordMatch = true;
-        this.isUserNameDuplicate = false;
-        this.userFrom.resetForm();
-    }
-
-
-    onCancel() {
-        this.opened = false;
-    }
-
-    onSubmit() {
-        if (this.isSubmitGoing) {
-            return;
+  checkUsernameDuplicate() {
+    this.service.list().subscribe(data => {
+      data.some(u => {
+        if (u.username === this.item.username) {
+          this.isUserNameDuplicate = true;
+          return;
         }
-        this.isSubmitGoing = true;
-        this.userService.create(this.user).subscribe(data => {
-            this.isSubmitGoing = false;
-            this.opened = false;
-            this.create.emit(true);
-        });
-    }
+      });
+    });
+  }
 
-    checkPassword() {
-        this.isPasswordMatch = this.user.password === this.user.ensurePassword;
-    }
+  create(): User {
+    return new User();
+  }
 
-    checkUsernameDuplicate() {
-        this.userService.list().subscribe(data => {
-            data.some(u => {
-                if (u.username === this.user.username) {
-                    this.isUserNameDuplicate = true;
-                    return;
-                }
-            });
-        });
+  createSuccessMsg(msg?: string) {
+    if (!msg) {
+      return new EventResult(true, '添加资源:' + this.item.username + '成功');
     }
+  }
 
-    newUser() {
-        this.reset();
-        this.opened = true;
-        this.user = new User();
+  createErrorMsg(msg?: string) {
+    if (!msg) {
+      return new EventResult(true, '添加资源:' + this.item.username + '失败');
     }
+  }
 }

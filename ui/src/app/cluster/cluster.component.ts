@@ -1,39 +1,29 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Location} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {CommonItemComponent} from '../ko-common/class/common-item-component';
+import {Cluster} from './class/cluster';
+import {CommonAlertService} from '../base/header/common-alert.service';
 import {ClusterCreateComponent} from './cluster-create/cluster-create.component';
 import {ClusterListComponent} from './cluster-list/cluster-list.component';
+import {ClusterDeleteComponent} from './cluster-delete/cluster-delete.component';
+import {ClusterDetailComponent} from './cluster-detail/cluster-detail.component';
 
 @Component({
-    selector: 'app-cluster',
-    templateUrl: './cluster.component.html',
-    styleUrls: ['./cluster.component.css']
+  selector: 'app-cluster',
+  templateUrl: './cluster.component.html',
+  styleUrls: ['./cluster.component.css']
 })
-export class ClusterComponent implements OnInit {
+export class ClusterComponent extends CommonItemComponent<Cluster> {
 
-    @ViewChild(ClusterCreateComponent, {static: true})
-    creationCluster: ClusterCreateComponent;
+  @ViewChild(ClusterCreateComponent, {static: true})
+  creation: ClusterCreateComponent;
+  @ViewChild(ClusterListComponent, {static: true})
+  list: ClusterListComponent;
+  @ViewChild(ClusterDeleteComponent, {static: true})
+  deletion: ClusterDeleteComponent;
+  @ViewChild(ClusterDetailComponent, {static: true})
+  detail: ClusterDetailComponent;
 
-    @ViewChild(ClusterListComponent, {static: true})
-    listCluster: ClusterListComponent;
-
-    constructor() {
-    }
-
-    ngOnInit() {
-    }
-
-    openAdd() {
-        this.creationCluster.newCluster();
-    }
-
-
-    openModal(): void {
-        this.creationCluster.newCluster();
-    }
-
-    createCluster(created: boolean) {
-        if (created) {
-            this.listCluster.listCluster();
-        }
-    }
+  constructor(public alert: CommonAlertService) {
+    super(alert);
+}
 }

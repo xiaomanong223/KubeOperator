@@ -2,7 +2,7 @@
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <h2>用户</h2>
     <app-user-list (add)="openAdd() " (delete)="openDelete($event)"></app-user-list>
-    <app-user-create (create)="postAdd()"></app-user-create>
-    <app-alert-delete (submit)="postDelete()"></app-alert-delete>
+    <app-user-create (created)="handelMsg($event)"></app-user-create>
+    <app-user-delete (deleted)="handelMsg($event)"></app-user-delete>
   </div>
 </div>

@@ -1,10 +1,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-export class CommonService<T> {
+export abstract class CommonService<T> {
   baseUrl = '';
 
-  constructor(public http: HttpClient) {
+  protected constructor(public http: HttpClient) {
 
   }
 

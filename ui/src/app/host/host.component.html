@@ -2,8 +2,8 @@
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <h2>主机</h2>
     <app-host-list (add)="openAdd() " (delete)=openDelete($event) (detail)="openDetail($event)"></app-host-list>
-    <app-host-create (create)="postAdd()"></app-host-create>
-    <app-alert-delete (submit)="postDelete()"></app-alert-delete>
+    <app-host-create (created)="handelMsg($event)"></app-host-create>
+    <app-host-delete (deleted)="handelMsg($event)"></app-host-delete>
     <app-host-detail></app-host-detail>
   </div>
 </div>

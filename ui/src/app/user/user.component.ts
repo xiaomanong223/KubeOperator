@@ -1,9 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserCreateComponent} from './user-create/user-create.component';
-import {UserListComponent} from './user-list/user-list.component';
-import {AlertDeleteComponent} from '../ko-common/component/alert-delete/alert-delete.component';
-import {CommonItem} from '../ko-common/class/common-item';
 import {User} from './user';
+import {UserDeleteComponent} from './user-delete/user-delete.component';
+import {CommonAlertService} from '../base/header/common-alert.service';
+import {EventResult} from '../ko-common/class/event-result';
+import {AlertLevels} from '../base/header/components/common-alert/alert';
+import {CommonItemComponent} from '../ko-common/class/common-item-component';
+import {UserListComponent} from './user-list/user-list.component';
 
 
 @Component({
@@ -11,39 +14,16 @@ import {User} from './user';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent extends CommonItemComponent<User> {
 
   @ViewChild(UserCreateComponent, {static: true})
   creation: UserCreateComponent;
   @ViewChild(UserListComponent, {static: true})
-  listUser: UserListComponent;
-  @ViewChild(AlertDeleteComponent, {static: true})
-  deletion: AlertDeleteComponent;
+  list: UserListComponent;
+  @ViewChild(UserDeleteComponent, {static: true})
+  deletion: UserDeleteComponent;
 
-  constructor() {
+  constructor(public alert: CommonAlertService) {
+    super(alert);
   }
-
-  openAdd() {
-    this.creation.newUser();
-  }
-
-  openDelete(items: CommonItem[]) {
-    this.deletion.open(items);
-  }
-
-  postDelete() {
-    this.listUser.confirmDelete();
-  }
-
-  postAdd() {
-    this.refresh();
-  }
-
-  refresh() {
-    this.listUser.listUser();
-  }
-
-  ngOnInit() {
-  }
-
 }

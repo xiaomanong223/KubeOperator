@@ -11,18 +11,18 @@
     <form clrForm #basicForm='ngForm'>
       <clr-input-container>
         <label>名称</label>
-        <input clrInput size="45" type="text" [(ngModel)]="cluster.name" name="name"
+        <input clrInput size="45" type="text" [(ngModel)]="item.name" name="name"
                (focusout)="nameDuplicateChecker()" required/>
-        <clr-control-helper *ngIf="isNameDuplicate">集群: {{this.cluster.name}} 已存在!</clr-control-helper>
+        <clr-control-helper *ngIf="isNameDuplicate">集群: {{this.item.name}} 已存在!</clr-control-helper>
       </clr-input-container>
       <clr-input-container>
         <label>域名</label>
-        <input clrInput size="45" type="text" [(ngModel)]="cluster.configs['domain']" name="domain"
+        <input clrInput size="45" type="text" [(ngModel)]="item.configs['domain']" name="domain"
                placeholder="example.com" required/>
       </clr-input-container>
       <clr-select-container>
         <label>离线包</label>
-        <select clrSelect [(ngModel)]="cluster.package" name="package" required>
+        <select clrSelect [(ngModel)]="item.package" name="package" required>
           <option value="">请选择</option>
           <option *ngFor="let pkg of packages" [value]="pkg.name">{{pkg.name}}</option>
         </select>
@@ -153,11 +153,11 @@
         <hr/>
         <clr-input-container>
           <label>Docker 数据目录</label>
-          <input clrInput size="45" name="docker_data" [(ngModel)]="cluster.configs['STORAGE_DIR']">
+          <input clrInput size="45" name="docker_data" [(ngModel)]="item.configs['STORAGE_DIR']">
         </clr-input-container>
         <clr-input-container>
           <label>Docker 默认网段</label>
-          <input clrInput size="45" name="docker_subnet" [(ngModel)]="cluster.configs['DOCKER_ADDR']">
+          <input clrInput size="45" name="docker_subnet" [(ngModel)]="item.configs['DOCKER_ADDR']">
         </clr-input-container>
       </div>
       <div>
@@ -165,7 +165,7 @@
         <hr/>
         <clr-input-container>
           <label>每个节点 POD 数量</label>
-          <input clrInput size="45" name="pod" [(ngModel)]="cluster.configs['MAX_PODS']">
+          <input clrInput size="45" name="pod" [(ngModel)]="item.configs['MAX_PODS']">
         </clr-input-container>
       </div>
       <div>
@@ -173,7 +173,7 @@
         <hr/>
         <clr-select-container>
           <label>运行模式</label>
-          <select clrSelect name="proxy" [(ngModel)]="cluster.configs['PROXY_MODE']">
+          <select clrSelect name="proxy" [(ngModel)]="item.configs['PROXY_MODE']">
             <option value="">请选择</option>
             <option value="iptables">IPTABLES</option>
             <option value="ipvs">IPVS</option>
@@ -186,11 +186,11 @@
         <hr/>
         <clr-input-container>
           <label>SERVICE 默认网段</label>
-          <input clrInput size="45" name="pod" [(ngModel)]="cluster.configs['SERVICE_CIDR']">
+          <input clrInput size="45" name="pod" [(ngModel)]="item.configs['SERVICE_CIDR']">
         </clr-input-container>
         <clr-input-container>
           <label>POD 默认网段</label>
-          <input clrInput size="45" name="pod" [(ngModel)]="cluster.configs['CLUSTER_CIDR']">
+          <input clrInput size="45" name="pod" [(ngModel)]="item.configs['CLUSTER_CIDR']">
         </clr-input-container>
         <hr/>
       </div>
@@ -199,7 +199,7 @@
         <hr/>
         <clr-input-container>
           <label>监控数据保存时长(天)</label>
-          <input clrInput size="45" name="day" [(ngModel)]="cluster.configs['PROMETHEUS_RETENTION']">
+          <input clrInput size="45" name="day" [(ngModel)]="item.configs['PROMETHEUS_RETENTION']">
         </clr-input-container>
       </div>
     </form>
@@ -211,9 +211,9 @@
       <h3>基础信息</h3>
       <hr/>
       <ul class="list">
-        <li>名称: {{cluster.name}}</li>
-        <li>域名: {{cluster.configs['domain']}}</li>
-        <li>离线包: {{cluster.package}}</li>
+        <li>名称: {{item.name}}</li>
+        <li>域名: {{item.configs['domain']}}</li>
+        <li>离线包: {{item.package}}</li>
         <li>网络插件: {{netWork.meta.name}}</li>
       </ul>
       <h3>存储</h3>

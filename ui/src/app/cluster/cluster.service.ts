@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Cluster} from './cluster';
+import {Cluster} from './class/cluster';
 import {CommonService} from '../ko-common/class/common-service';
 
 

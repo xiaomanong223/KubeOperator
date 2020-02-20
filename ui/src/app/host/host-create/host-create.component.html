@@ -32,7 +32,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" (click)="onCancel()" [disabled]="isSubmitGoing">取消</button>
         <button type="submit" class="btn btn-primary" (click)="onSubmit()"
-                [disabled]="isSubmitGoing || hostForm.invalid || localIp===item.ip">
+                [disabled]="isSubmitGoing || hostForm.invalid">
           <i *ngIf="isSubmitGoing " class="fa fa-spinner fa-pulse"></i>提交
         </button>
       </div>

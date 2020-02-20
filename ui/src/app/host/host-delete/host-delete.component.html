@@ -1,0 +1,22 @@
+<clr-modal [(clrModalOpen)]="opened" [clrModalSize]="'lg'">
+
+  <h3 class="modal-title">确认删除</h3>
+  <div class="modal-body">
+    请确认是否删除资源：<br/>
+    <table>
+      <table class="table table-compact table-noborder">
+        <thead>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{item.name}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="onCancel()">取消</button>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()">确认</button>
+  </div>
+</clr-modal>

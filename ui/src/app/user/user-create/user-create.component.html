@@ -1,10 +1,10 @@
-<clr-modal [(clrModalOpen)]="opened" [clrModalClosable]="closable">
+<clr-modal [(clrModalOpen)]="opened">
   <h3 class="modal-title">添加用户</h3>
   <div class="modal-body modal-height">
     <form clrForm #userForm='ngForm'>
       <clr-input-container>
         <label>用户名:</label>
-        <input clrInput size=45 maxlength="30" type="text" [(ngModel)]="user.username" name="username"
+        <input clrInput size=45 maxlength="30" type="text" [(ngModel)]="item.username" name="username"
                (focusout)="checkUsernameDuplicate()" required>
         <clr-control-helper *ngIf="isUserNameDuplicate">此用户名已被使用!</clr-control-helper>
       </clr-input-container>
@@ -13,28 +13,28 @@
         <label>邮箱:</label>
         <input clrInput type="email"
                pattern="^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$" size=45
-               [(ngModel)]="user.email" name="email" required>
+               [(ngModel)]="item.email" name="email" required>
         <clr-control-error>请输入正确格式的邮箱地址!</clr-control-error>
       </clr-input-container>
 
       <clr-password-container>
         <label>密码:</label>
-        <input clrPassword size=40 maxlength="15" type="password" [(ngModel)]="user.password" name="name"
+        <input clrPassword size=40 maxlength="15" type="password" [(ngModel)]="item.password" name="name"
                (change)="checkPassword()" required>
-        <clr-control-helper *ngIf="!isPasswordMatch && user.password &&user.ensurePassword">密码不一致！</clr-control-helper>
+        <clr-control-helper *ngIf="!isPasswordMatch && item.password &&item.ensurePassword">密码不一致！</clr-control-helper>
       </clr-password-container>
 
       <clr-password-container>
         <label>确认密码:</label>
-        <input clrPassword size=40 maxlength="15" type="password" [(ngModel)]="user.ensurePassword" name="name"
+        <input clrPassword size=40 maxlength="15" type="password" [(ngModel)]="item.ensurePassword" name="name"
                (change)="checkPassword()" required>
-        <clr-control-helper *ngIf="!isPasswordMatch && user.password &&user.ensurePassword">密码不一致！</clr-control-helper>
+        <clr-control-helper *ngIf="!isPasswordMatch && item.password &&item.ensurePassword">密码不一致！</clr-control-helper>
       </clr-password-container>
 
       <clr-checkbox-container>
         <label>管理员</label>
         <clr-checkbox-wrapper>
-          <input clrToggle type="checkbox" name="admin" [(ngModel)]="user.is_superuser">
+          <input clrToggle type="checkbox" name="admin" [(ngModel)]="item.is_superuser">
         </clr-checkbox-wrapper>
       </clr-checkbox-container>
 

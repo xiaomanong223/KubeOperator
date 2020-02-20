@@ -6,9 +6,10 @@ import {CoreModule} from '../core/core.module';
 import {UserService} from './user.service';
 import {UserCreateComponent} from './user-create/user-create.component';
 import {KoCommonModule} from '../ko-common/ko-commmon.module';
+import { UserDeleteComponent } from './user-delete/user-delete.component';
 
 @NgModule({
-  declarations: [UserComponent, UserListComponent, UserCreateComponent],
+  declarations: [UserComponent, UserListComponent, UserCreateComponent, UserDeleteComponent],
   imports: [
     CommonModule,
     KoCommonModule,

@@ -8,9 +8,10 @@ import {HostCreateComponent} from './host-create/host-create.component';
 import {HostDetailComponent} from './host-detail/host-detail.component';
 import {SharedModule} from '../shared/shared.module';
 import {KoCommonModule} from '../ko-common/ko-commmon.module';
+import { HostDeleteComponent } from './host-delete/host-delete.component';
 
 @NgModule({
-  declarations: [HostComponent, HostListComponent, HostCreateComponent, HostDetailComponent],
+  declarations: [HostComponent, HostListComponent, HostCreateComponent, HostDetailComponent, HostDeleteComponent],
   imports: [
     CommonModule,
     KoCommonModule,

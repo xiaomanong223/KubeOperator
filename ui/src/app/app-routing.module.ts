@@ -23,7 +23,6 @@ import {PlanComponent} from './plan/plan.component';
 import {F5BigIpComponent} from './f5-big-ip/f5-big-ip.component';
 import {DeployPlanComponent} from './deploy-plan/deploy-plan.component';
 import {ClusterHealthComponent} from './cluster-health/cluster-health.component';
-import {ApplicationComponent} from './application/application.component';
 import {ClusterBackupComponent} from './cluster-backup/cluster-backup.component';
 import {BackupStorageSettingComponent} from './setting/backup-storage-setting/backup-storage-setting.component';
 import {NfsComponent} from './nfs/nfs.component';
@@ -35,10 +34,10 @@ import {ClusterStorageComponent} from './cluster-storage/cluster-storage.compone
 import {ClusterEventComponent} from './cluster-event/cluster-event.component';
 import {CephComponent} from './ceph/ceph.component';
 import {ItemComponent} from './item/item.component';
-import {ItemDetailComponent} from "./item/item-detail/item-detail.component";
-import {ItemRoutingResolverService} from "./item/item-routing-resolver.service";
-import {ItemMemberComponent} from "./item-member/item-member.component";
-import {ItemResourceComponent} from "./item-resource/item-resource.component";
+import {ItemDetailComponent} from './item/item-detail/item-detail.component';
+import {ItemRoutingResolverService} from './item/item-routing-resolver.service';
+import {ItemMemberComponent} from './item-member/item-member.component';
+import {ItemResourceComponent} from './item-resource/item-resource.component';
 
 const routes: Routes = [
   {path: 'sign-in', component: SignInComponent},
@@ -96,7 +95,6 @@ const routes: Routes = [
           {path: 'node', component: NodeComponent},
           {path: 'deploy', component: DeployComponent},
           {path: 'log', component: LogComponent},
-          {path: 'apps', component: ApplicationComponent},
           {path: 'health', component: ClusterHealthComponent},
           {path: 'event', component: ClusterEventComponent},
           {path: 'backup', component: ClusterBackupComponent},
@@ -123,7 +121,6 @@ const routes: Routes = [
               {path: 'node', component: NodeComponent},
               {path: 'deploy', component: DeployComponent},
               {path: 'log', component: LogComponent},
-              {path: 'apps', component: ApplicationComponent},
               {path: 'health', component: ClusterHealthComponent},
               {path: 'event', component: ClusterEventComponent},
               {path: 'backup', component: ClusterBackupComponent},

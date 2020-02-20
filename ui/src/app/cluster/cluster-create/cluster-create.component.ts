@@ -12,25 +12,23 @@ import {StorageClass} from '../class/storage-class';
 import {ClusterService} from '../cluster.service';
 import {NgForm} from '@angular/forms';
 import {Network} from '../class/network';
-import {CommonAlertService} from '../../base/header/common-alert.service';
-import {AlertLevels} from '../../base/header/components/common-alert/alert';
+import {CommonCreateComponent} from '../../ko-common/class/common-create-component';
 
 @Component({
   selector: 'app-cluster-create',
   templateUrl: './cluster-create.component.html',
   styleUrls: ['./cluster-create.component.css']
 })
-export class ClusterCreateComponent implements OnInit {
+export class ClusterCreateComponent extends CommonCreateComponent<Cluster> {
 
-  constructor(private packageService: PackageService, private hostService: HostService,
+  constructor(private packageService: PackageService,
+              private hostService: HostService,
               private configService: ConfigFileService,
-              private clusterService: ClusterService,
-              private alert: CommonAlertService) {
+              public service: ClusterService) {
+    super(service);
   }
 
   @ViewChild('wizard', {static: true}) wizard: ClrWizard;
-  opened = false;
-  isOnSubmitGoing = false;
   packages: Package[] = [];
   hosts: Host[] = [];
   nodes: Node[] = [];
@@ -41,7 +39,6 @@ export class ClusterCreateComponent implements OnInit {
   nodeSize = 0;
   storageSize = 0;
   clusterConfig: ConfigFile = new ConfigFile();
-  cluster: Cluster = new Cluster();
   isNameDuplicate = false;
 
   // forms
@@ -50,16 +47,7 @@ export class ClusterCreateComponent implements OnInit {
   @ViewChild('storageForm', {static: true}) storageForm: NgForm;
   @ViewChild('networkForm', {static: true}) networkForm: NgForm;
 
-
-  ngOnInit() {
-  }
-
-  newCluster() {
-    this.clear();
-    this.opened = true;
-  }
-
-  clear() {
+  reset() {
     this.resetForms();
     this.wizard.reset();
     this.networkMetas = [];
@@ -67,7 +55,7 @@ export class ClusterCreateComponent implements OnInit {
     this.nodes = [];
     this.storageClazz = [];
     this.netWork = new Network();
-    this.cluster = new Cluster();
+    this.item = new Cluster();
     this.listPackages();
     this.listHosts();
     this.getClusterConfig();
@@ -87,16 +75,8 @@ export class ClusterCreateComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.isOnSubmitGoing) {
-      return;
-    }
-    this.isOnSubmitGoing = true;
     this.fullCluster();
-    this.clusterService.create(this.cluster).subscribe(() => {
-      this.opened = false;
-      this.isOnSubmitGoing = false;
-      this.alert.showAlert('创建集群成功！', AlertLevels.SUCCESS);
-    });
+    super.onSubmit();
   }
 
   fullCluster() {
@@ -106,7 +86,7 @@ export class ClusterCreateComponent implements OnInit {
   }
 
   handleNodes() {
-    this.cluster.nodes = this.nodes;
+    this.item.nodes = this.nodes;
   }
 
   handleStorageClass() {
@@ -115,7 +95,7 @@ export class ClusterCreateComponent implements OnInit {
       Object.assign(vars, storage.vars, storage.meta.vars);
       for (const key in vars) {
         if (key) {
-          this.cluster.configs['key'] = vars['key'];
+          this.item.configs['key'] = vars['key'];
         }
       }
     }
@@ -126,7 +106,7 @@ export class ClusterCreateComponent implements OnInit {
     Object.assign(vars, this.netWork.vars, this.netWork.meta.vars);
     for (const key in vars) {
       if (key) {
-        this.cluster.configs['key'] = vars['key'];
+        this.item.configs['key'] = vars['key'];
       }
     }
   }
@@ -139,7 +119,7 @@ export class ClusterCreateComponent implements OnInit {
   }
 
   nameDuplicateChecker() {
-    this.clusterService.get(this.cluster.name).subscribe(() => {
+    this.service.get(this.item.name).subscribe(() => {
       this.isNameDuplicate = true;
     }, () => {
       this.isNameDuplicate = false;
@@ -236,6 +216,10 @@ export class ClusterCreateComponent implements OnInit {
       this.clusterConfig = data;
       this.generateDefaultNodes();
     });
+  }
+
+  create(): Cluster {
+    return new Cluster();
   }
 
 
