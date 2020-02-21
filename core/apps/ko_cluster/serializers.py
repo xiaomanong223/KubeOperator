@@ -8,11 +8,18 @@ from ko_cluster.model.role import Role
 from ko_host.models import Host
 from ko_package.models import Package
 
+__all__ = ["NodeSerializer", "RoleSerializer", "ClusterSerializer", "ConfigFileSerializer"]
+
 
 class NodeSerializer(AnsibleHostSerializer):
     roles = serializers.SlugRelatedField(
         many=True, queryset=Role.objects.all(),
         slug_field='name', required=False
+    )
+    host = serializers.SlugRelatedField(
+        many=False,
+        queryset=Host.objects.all(),
+        slug_field='name', required=True
     )
 
     class Meta:
@@ -39,8 +46,8 @@ class ClusterSerializer(ProjectSerializer):
         queryset=Package.objects.all(),
         slug_field='name', required=False
     )
-    configs = serializers.DictField(required=False)
-    nodes = serializers.ListField(required=False)
+    configs = serializers.DictField(required=True)
+    nodes = NodeSerializer(many=True, required=True)
 
     def create(self, validated_data):
         instance = super().create(validated_data)
@@ -48,7 +55,7 @@ class ClusterSerializer(ProjectSerializer):
 
     class Meta:
         model = Cluster
-        fields = ['id', 'name', 'package', 'date_created', 'configs', 'nodes']
+        fields = ['id', 'name', 'package', 'date_created', 'configs']
         read_only_fields = ['id', 'date_created']
 
 

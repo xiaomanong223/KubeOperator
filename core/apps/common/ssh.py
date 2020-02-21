@@ -33,6 +33,7 @@ class SSHClient:
                 self.config.port,
                 self.config.username,
                 self.config.password,
+                timeout=10,
                 key_filename=create_ssh_key(self.config.private_key)
             )
             session = client.get_transport().open_session()

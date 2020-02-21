@@ -4,9 +4,6 @@ KubeOperator  配置文件
 
 import os
 import datetime
-from celery.schedules import crontab
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from cmreslogging.handlers import CMRESHandler
 
 from .conf import load_user_config
 
