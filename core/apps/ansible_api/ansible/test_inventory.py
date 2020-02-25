@@ -4,6 +4,7 @@
 import sys
 import unittest
 import warnings
+import json
 
 sys.path.insert(0, '../..')
 from ansible_api.ansible.inventory import BaseInventory
@@ -36,11 +37,11 @@ class TestJMSInventory(unittest.TestCase):
 
         group_list = [{
             "name": "group1",
-            "hosts": ["testserver1",],
+            "hosts": ["testserver1", ],
             "vars": {"service": "app"}
         }, {
             "name": "group2",
-            "hosts": ["testserver2",],
+            "hosts": ["testserver2", ],
             "vars": {"service": "gaga"}
         }, {
             "name": "group3",
@@ -50,8 +51,11 @@ class TestJMSInventory(unittest.TestCase):
         data = {"hosts": host_list, "groups": group_list}
         self.inventory = BaseInventory(data=data)
 
+    def test_inventory(self):
+        print("#" * 10 + "Hosts" + "#" * 10)
+
     def test_hosts(self):
-        print("#"*10 + "Hosts" + "#"*10)
+        print("#" * 10 + "Hosts" + "#" * 10)
         for host in self.inventory.hosts:
             print(host)
 

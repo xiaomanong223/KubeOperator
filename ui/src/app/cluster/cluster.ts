@@ -1,6 +1,5 @@
 import {Node} from '../node/node';
 import {Execution} from '../deploy/component/operater/execution';
-import {App, Config, Template} from '../package/package';
 
 export class Cluster {
   id: string;
